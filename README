@@ -1,0 +1,3 @@
+Plain Go implementation of iconv
+
+I'm using codepages from python standard library by using compile-codepages.py script.
