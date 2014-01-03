@@ -100,6 +100,28 @@ TABLES = {
      "mac_turkish": []
 }
 
+def gen_test(nm):
+    us = []
+    os = []
+    for i in range(32, 256):
+        c = chr(i)
+        try:
+            us.append(c.decode(nm))
+            os.append(c)
+        except:
+            pass
+    s = u''.join(us)
+    orig = "".join(os)
+
+    for cp in [ "utf-8", "utf-16le", "utf-16be", "utf-32le", "utf-32be" ]:
+        fnm = "test_%s_%s.txt" % (nm, cp)
+        f = open(fnm, "wb")
+        f.write(s.encode(cp))
+        f.close()
+    f = open("test_%s_ORIG.txt" % nm, "wb")
+    f.write(orig)
+    f.close()
+
 # Process aliases:
 aliases = encodings.aliases.aliases
 for a in aliases:
@@ -161,7 +183,7 @@ def reversetable(tbl):
     S.write("}\n")
     return 'tbl_%d' % tblnum, S.getvalue()
 
-if __name__ == '__main__':
+def gen_tables():
     f = open(os.path.join(os.path.dirname(__file__), "tables8.go"), "wt")
     pre = load("pre.go")
     f.write(pre)
@@ -190,5 +212,43 @@ if __name__ == '__main__':
     f.write(post)
     f.close()
     print "DONE"
+
+def gen_tests():
+    print "Generate tests for several characters encodings..."
+    TEST = []
+    TEST.append("""#!/bin/sh
+
+T=/tmp/test-goconv.$$
+GOCONV=../test/test
+
+error()
+{
+    echo "Error: $*" 1>&2
+    exit 1
+}
+
+test()
+{
+    "$GOCONV" -f "$1" -t "$2" -o "$T" "test_$1_ORIG.txt" || error "$1 -> $2"
+    diff test_$1_$2.txt "$T" || error "$1 -> $2: invalid"
+    rm -f "$T"
+}
+
+""")
+
+    for t in TABLES:
+        gen_test(t)
+        for cp in [ "utf-8", "utf-16le", "utf-16be", "utf-32le", "utf-32be" ]:
+            TEST.append("test %s %s\n" % (t, cp))
+
+    f = open("test.sh", "wt")
+    f.write("".join(TEST))
+    f.close()
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1] == 'test':
+        gen_tests()
+    else:
+        gen_tables()
 
 

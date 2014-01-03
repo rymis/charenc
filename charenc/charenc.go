@@ -395,3 +395,27 @@ func RunesToString(ctx RuneEncoder, r []rune) (string, error) {
 
 	return string(res), err
 }
+
+// ListEncodings list all supported character encodings:
+func ListEncodings() []string {
+	len_unicode := len(unicode)
+
+	l := len_unicode + len(names)
+
+	r := make([]string, l)
+
+	i := 0
+	for s := range(unicode) {
+		r[i] = s
+		i++
+	}
+
+	for j := range(names) {
+		r[i] = names[j].name
+		i++
+	}
+
+	return r
+}
+
+
