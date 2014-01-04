@@ -133,7 +133,7 @@ def pytable(enc):
     " This function creates unicode string with all encoded characters "
     r = { }
     for i in range(256):
-        if i < 128:
+        if i < 32:
             r[chr(i)] = i
         else:
             c = chr(i)
@@ -219,7 +219,9 @@ def gen_tests():
     TEST.append("""#!/bin/sh
 
 T=/tmp/test-goconv.$$
-GOCONV=../test/test
+if [ "x$GOCONV" = x ]; then
+    GOCONV=../goconv/goconv
+fi
 
 error()
 {

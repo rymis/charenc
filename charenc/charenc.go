@@ -262,6 +262,42 @@ func get_UCS4() CharacterEncoding {
 	return enc_UCS4{0}
 }
 
+type enc_UTF16LE struct { }
+
+func (self enc_UTF16LE) DecodeRune(p []byte) (rune, int) {
+	return decode_rune(p, false, 2)
+}
+
+func (self enc_UTF16LE) FullRune(p []byte) bool {
+	return len(p) >= 2
+}
+
+func (self enc_UTF16LE) EncodeRune(p []byte, r rune) int {
+	return encode_rune(p, r, false, 2)
+}
+
+func get_UTF16LE() CharacterEncoding {
+	return enc_UTF16LE{}
+}
+
+type enc_UTF16BE struct { }
+
+func (self enc_UTF16BE) DecodeRune(p []byte) (rune, int) {
+	return decode_rune(p, true, 2)
+}
+
+func (self enc_UTF16BE) FullRune(p []byte) bool {
+	return len(p) >= 2
+}
+
+func (self enc_UTF16BE) EncodeRune(p []byte, r rune) int {
+	return encode_rune(p, r, true, 2)
+}
+
+func get_UTF16BE() CharacterEncoding {
+	return enc_UTF16BE{}
+}
+
 type init_unicode func () CharacterEncoding
 
 var unicode = map[string]init_unicode{
@@ -273,6 +309,14 @@ var unicode = map[string]init_unicode{
 	"UCS4": get_UCS4,
 	"UCS4LE": get_UCS4LE,
 	"UCS4BE": get_UCS4BE,
+	"UTF32LE": get_UCS4LE,
+	"UTF32BE": get_UCS4BE,
+	"UTF-32LE": get_UCS4LE,
+	"UTF-32BE": get_UCS4BE,
+	"UTF-16LE": get_UTF16LE,
+	"UTF-16BE": get_UTF16BE,
+	"UTF16LE": get_UTF16LE,
+	"UTF16BE": get_UTF16BE,
 }
 
 type bit8 struct {

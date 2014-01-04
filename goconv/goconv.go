@@ -100,7 +100,7 @@ func main() {
 	for {
 		cnt, e := reader.Read(buf)
 		if cnt > 0 {
-			cnt2, e2 := stdout.Write(buf)
+			cnt2, e2 := stdout.Write(buf[:cnt])
 			if cnt2 < cnt {
 				if e2 != nil { // MUST be
 					println("Write failed: " + e.Error())
