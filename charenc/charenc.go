@@ -85,7 +85,7 @@ func get_UTF8() CharacterEncoding {
 func decode_rune(p []byte, be bool, size int) (rune, int) {
 	var val uint32 = 0
 	if len(p) < size {
-		return 0, 0 // End of string
+		return RuneError, 0 // End of string
 	}
 
 	for i := 0; i < size; i++ {
@@ -262,6 +262,7 @@ func get_UCS4() CharacterEncoding {
 	return enc_UCS4{0}
 }
 
+/* TODO: we need to make real UTF-16 encoder/decoder, this is only UCS2 */
 type enc_UTF16LE struct { }
 
 func (self enc_UTF16LE) DecodeRune(p []byte) (rune, int) {
