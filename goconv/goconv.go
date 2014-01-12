@@ -51,6 +51,12 @@ func parse_cmdline() cmdline {
 	}
 
 	r.inputs = flag.Args()
+	if ignore {
+		r.flags |= charenc.IgnoreErrors
+	}
+	if replace {
+		r.flags |= charenc.ReplaceErrors
+	}
 
 	return r
 }
@@ -119,7 +125,7 @@ func main() {
 		}
 	}
 
-	reader := charenc.GetReader(stdin, params.from_enc, params.to_enc, charenc.ReplaceErrors)
+	reader := charenc.GetReader(stdin, params.from_enc, params.to_enc, params.flags)
 	if reader == nil {
 		fmt.Fprintf(os.Stderr, "Error: can not create converter\n")
 		os.Exit(1)
