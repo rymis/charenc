@@ -1,0 +1,1 @@
+Clean Go implementation of functions for character encodings and decodings. Contains Reader and Writer implementations with re-encoding of text. Simple test program can be used as iconv.
